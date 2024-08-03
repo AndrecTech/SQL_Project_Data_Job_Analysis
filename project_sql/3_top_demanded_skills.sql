@@ -8,7 +8,9 @@ the job market, providing insights into the most valuable
 skills for job seekers.
 */
 
-SELECT *
+SELECT
+	sd.skills,
+	COUNT (sjd.skill_id) AS demand_count
 FROM
 	job_postings_fact AS jpf
 INNER JOIN
@@ -17,5 +19,12 @@ ON sjd.job_id = jpf.job_id
 INNER JOIN
 	skills_dim AS sd
 	ON sd.skill_id = sjd.skill_id
+WHERE
+	jpf.job_title_short = 'Data Analyst'
+	AND jpf.job_work_from_home = TRUE -- Remote Filter
+GROUP BY
+	sd.skills
+ORDER BY
+	COUNT (sjd.skill_id) DESC
 LIMIT 5
 ;
